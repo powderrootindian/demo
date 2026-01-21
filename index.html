@@ -19,18 +19,19 @@
 
     <nav>
         <div class="logo">POWDER<span>ROOT</span></div>
-        <div class="nav-right">
-            <div id="auth-section">
-                <button id="login-btn" class="btn-gold-outline">GOOGLE LOGIN</button>
-                <div id="user-profile" class="hidden">
-                    <img id="user-img" src="" alt="Profile">
-                </div>
-            </div>
-            <div class="cart-trigger" onclick="toggleCart()">
-                <i class="fa-solid fa-bag-shopping"></i>
-                <span id="cart-count">0</span>
-            </div>
+<div class="nav-right">
+    <div id="auth-section">
+        <button id="login-btn" class="btn-gold-outline">LOGIN</button>
+        <div id="user-profile" class="hidden">
+            <img id="user-img" src="" alt="Profile">
+            <span id="logout-link" onclick="handleLogout()">Logout</span>
         </div>
+    </div>
+    <div class="cart-trigger" onclick="toggleCart()">
+        <i class="fa-solid fa-bag-shopping"></i>
+        <span id="cart-count">0</span>
+    </div>
+</div>
     </nav>
 
     <section class="hero">
@@ -90,4 +91,5 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="module" src="js/app.js"></script>
 </body>
+
 </html>
