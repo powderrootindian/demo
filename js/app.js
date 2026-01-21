@@ -1,8 +1,8 @@
-// 1. IMPORT NECESSARY SERVICES
+// 1. SERVICE IMPORTS
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// 2. CONFIGURATIONS (Change these to your real keys!)
+// 2. CONFIGURATIONS (REPLACE WITH YOUR KEYS)
 const firebaseConfig = {
   apiKey: "AIzaSyC-VwmmnGZBPGctP8bWp_ozBBTw45-eYds",
   authDomain: "powderroot26.firebaseapp.com",
@@ -15,25 +15,25 @@ const firebaseConfig = {
 const EMAILJS_PUB_KEY = "lxY_3luPFEJNp2_dO";
 const EMAILJS_SERVICE = "service_cs926jb";
 const EMAILJS_TEMPLATE = "template_ojt95o7";
-const PHONE_NUMBER = "919096999662"; // Your WhatsApp number
+const PHONE_NUMBER = "919876543210"; // Your number (Format: 91...)
 
-// 3. INITIALIZE SERVICES
+// 3. INITIALIZE
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 emailjs.init(EMAILJS_PUB_KEY);
 
-// 4. PRODUCT DATA
+// 4. PRODUCT CATALOG (Currency: ₹)
 const products = [
-    { id: 1, name: "Artisanal Onion", price: 45, img: "assets/images/onion.jpg", desc: "Hand-milled sun-dried shallots." },
-    { id: 2, name: "Roasted Garlic", price: 55, img: "assets/images/garlic.jpg", desc: "Slow-aged for deep umami essence." },
-    { id: 3, name: "Infused Ginger", price: 50, img: "assets/images/ginger.jpg", desc: "Sharply refined organic root." }
+    { id: 1, name: "Artisanal Onion", price: 450, img: "assets/images/onion.jpg", desc: "Hand-milled sun-dried shallots." },
+    { id: 2, name: "Roasted Garlic", price: 550, img: "assets/images/garlic.jpg", desc: "Slow-aged for deep umami essence." },
+    { id: 3, name: "Infused Ginger", price: 500, img: "assets/images/ginger.jpg", desc: "Sharply refined organic root." }
 ];
 
 let cart = [];
 let currentUser = null;
 
-// 5. AUTHENTICATION LOGIC
+// 5. AUTHENTICATION (Login & Logout)
 onAuthStateChanged(auth, (user) => {
     const loginBtn = document.getElementById('login-btn');
     const userProfile = document.getElementById('user-profile');
@@ -44,22 +44,30 @@ onAuthStateChanged(auth, (user) => {
         loginBtn.classList.add('hidden');
         userProfile.classList.remove('hidden');
         userImg.src = user.photoURL;
+    } else {
+        currentUser = null;
+        loginBtn.classList.remove('hidden');
+        userProfile.classList.add('hidden');
     }
 });
 
 document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
 
-// 6. CART & UI LOGIC
+window.handleLogout = () => {
+    signOut(auth).then(() => {
+        alert("Logged out successfully.");
+        location.reload();
+    });
+};
+
+// 6. CART LOGIC
 window.toggleCart = () => document.getElementById('cart-drawer').classList.toggle('active');
 
 window.addToCart = (id) => {
     const product = products.find(x => x.id === id);
     cart.push(product);
     renderCart();
-    // Auto-open cart when adding item
-    if(!document.getElementById('cart-drawer').classList.contains('active')) {
-        window.toggleCart();
-    }
+    if(!document.getElementById('cart-drawer').classList.contains('active')) window.toggleCart();
 };
 
 window.removeItem = (index) => {
@@ -78,83 +86,78 @@ function renderCart() {
     cart.forEach((item, idx) => {
         total += item.price;
         list.innerHTML += `
-            <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #222; padding-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #222; padding-bottom:10px;">
                 <div>
                     <div style="font-size:0.9rem; font-weight:600;">${item.name}</div>
-                    <div style="color:#ff4d4d; font-size:0.7rem; cursor:pointer; margin-top:5px;" onclick="removeItem(${idx})">REMOVE</div>
+                    <div style="color:#ff4d4d; font-size:0.7rem; cursor:pointer; margin-top:4px;" onclick="removeItem(${idx})">REMOVE</div>
                 </div>
-                <span style="color:#D4AF37">$${item.price}</span>
+                <span style="color:#D4AF37; font-weight:600;">₹${item.price}</span>
             </div>`;
     });
 
-    totalDisp.innerText = `$${total.toFixed(2)}`;
+    totalDisp.innerText = `₹${total.toFixed(2)}`;
     countDisp.innerText = cart.length;
 }
 
-// 7. CHECKOUT (WHATSAPP + EMAIL)// --- CONFIGURATION ---
+// 7. THE CLEAN WHATSAPP CHECKOUT
 window.checkoutViaWhatsApp = async () => {
-    if(cart.length === 0) return alert("Please add products to your bag first.");
+    if(cart.length === 0) return alert("Your bag is empty.");
 
-    // Capture Address Data
     const addr = document.getElementById('cust-address').value;
     const city = document.getElementById('cust-city').value;
     const zip = document.getElementById('cust-zip').value;
 
-    if(!addr || !city || !zip) {
-        return alert("Please provide complete shipping details.");
-    }
+    if(!addr || !city || !zip) return alert("Please fill in your shipping address.");
 
     const total = cart.reduce((a,b) => a + b.price, 0);
     const fullAddress = `${addr}, ${city} - ${zip}`;
-    const itemNames = cart.map(i => i.name).join(", ");
 
-    // Step A: Send EmailJS (Silent background process)
+    // Elegant Text Message
+    let waText = `✨ *NEW ORDER: POWDER ROOT* ✨\n`;
+    waText += `──────────────────\n\n`;
+    waText += `🛍️ *ORDER SUMMARY:*\n`;
+    cart.forEach((item, i) => waText += `${i+1}. ${item.name} — ₹${item.price}\n`);
+    waText += `\n💰 *TOTAL PAYABLE:* ₹${total}.00\n`;
+    waText += `──────────────────\n\n`;
+    waText += `📍 *SHIPPING TO:*\n${fullAddress}\n\n`;
+
+    if(currentUser) {
+        waText += `👤 *CUSTOMER:*\n${currentUser.displayName}\n(${currentUser.email})\n`;
+    }
+    waText += `──────────────────\n`;
+    waText += `_Thank you for choosing Powder Root_`;
+
+    // EmailJS (Background Notification)
     if(currentUser) {
         const templateParams = {
             to_name: currentUser.displayName,
             user_email: currentUser.email,
-            order_details: itemNames,
-            total_price: `$${total}`,
+            order_details: cart.map(i => i.name).join(", "),
+            total_price: `₹${total}`,
             shipping_address: fullAddress
         };
-        
-        emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, templateParams)
-            .then(() => console.log("Email Notification Sent"))
-            .catch(err => console.error("Email Error:", err));
+        emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, templateParams);
     }
 
-    // Step B: Formulate WhatsApp Message
-    let waText = `*NEW ORDER - POWDER ROOT*%0A`;
-    waText += `--------------------------%0A`;
-    cart.forEach(i => waText += `• ₹{i.name} ($₹{i.price})`);
-    waText += `--------------------------%0A`;
-    waText += `*TOTAL: $₹{total}`;
-    waText += `*SHIPPING TO:{fullAddress}`;
-
-    // Step C: Open WhatsApp
     window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(waText)}`, '_blank');
 };
 
-// 8. RENDER PRODUCTS & SCROLL ANIMATION
-const productContainer = document.getElementById('product-container');
+// 8. PAGE LOAD & ANIMATIONS
+const container = document.getElementById('product-container');
 products.forEach(p => {
-    productContainer.innerHTML += `
+    container.innerHTML += `
         <div class="product-card reveal">
             <img src="${p.img}" alt="${p.name}">
-            <h3 style="font-family:'Cinzel'; margin-top:20px; letter-spacing:2px;">${p.name}</h3>
-            <p style="font-size:0.75rem; color:#888; margin:10px 0; text-transform:uppercase;">${p.desc}</p>
-            <p style="color:#D4AF37; font-weight:bold; margin-bottom:20px;">₹${p.price}.00</p>
+            <h3 style="font-family:'Cinzel'; margin-top:20px; letter-spacing:1px;">${p.name}</h3>
+            <p style="font-size:0.7rem; color:#777; margin:10px 0; letter-spacing:1px;">${p.desc}</p>
+            <p style="color:#D4AF37; font-weight:bold; font-size:1.1rem; margin-bottom:15px;">₹${p.price}</p>
             <button class="btn-gold-outline" onclick="addToCart(${p.id})">ADD TO BAG</button>
         </div>
     `;
 });
 
-// Intersection Observer for the "Reveal" effect
+// Scroll Reveal Observer
 const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if(entry.isIntersecting) entry.target.classList.add('active');
-    });
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
 }, { threshold: 0.1 });
-
-
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
