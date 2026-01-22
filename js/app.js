@@ -21,7 +21,7 @@ const PHONE_NUMBER = "919096999662"; // Your number (Format: 91...)
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
-emailjs.init(EMAILJS_PUB_KEY);
+emailjs.init(lxY_3luPFEJNp2_dO);
 
 // 4. PRODUCT CATALOG (Currency: ₹)
 const products = [
@@ -161,4 +161,5 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
 
