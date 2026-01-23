@@ -351,3 +351,39 @@ footer {
 }
 
 .hidden { display: none; }
+/* Container for Logo + Text */
+.logo-container {
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.logo-container:hover {
+    opacity: 0.8;
+}
+
+/* Specific Logo Image Styling */
+#nav-logo {
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3)); /* Adds a subtle gold glow */
+    object-fit: contain;
+}
+
+/* Ensure Logo Text stays aligned */
+.logo {
+    display: flex;
+    align-items: center;
+    font-family: 'Cinzel', serif;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    line-height: 1;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    #nav-logo {
+        height: 30px; /* Smaller logo for mobile */
+    }
+    .logo {
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+    }
+}
