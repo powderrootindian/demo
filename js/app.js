@@ -75,33 +75,27 @@ window.removeItem = (index) => {
 function renderCart() {
     const list = document.getElementById('cart-items-list');
     const totalDisp = document.getElementById('cart-total');
-    const countDisp = document.getElementById('cart-count');
-    const qrSection = document.getElementById('qr-payment-section');
+    const qrSection = document.getElementById('qr-payment-section'); // Finds the QR block
     
     list.innerHTML = "";
     let total = 0;
 
     cart.forEach((item, idx) => {
         total += item.price;
-        list.innerHTML += `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #222; padding-bottom:10px;">
-                <div>
-                    <div style="font-size:0.9rem; font-weight:600; color:#fff;">${item.name}</div>
-                    <div style="color:#ff4d4d; font-size:0.7rem; cursor:pointer; margin-top:4px;" onclick="removeItem(${idx})">REMOVE</div>
-                </div>
-                <span style="color:#D4AF37; font-weight:600;">₹${item.price}</span>
-            </div>`;
+        // ... (rest of your item listing code)
     });
 
     totalDisp.innerText = `₹${total.toFixed(2)}`;
-    countDisp.innerText = cart.length;
 
-    // Show/Hide QR Code based on cart content
+    // THE POP-UP LOGIC:
     if (qrSection) {
-        qrSection.style.display = cart.length > 0 ? 'block' : 'none';
+        if (cart.length > 0) {
+            qrSection.style.display = 'block'; // Shows it when cart has items
+        } else {
+            qrSection.style.display = 'none';  // Hides it if cart is empty
+        }
     }
 }
-
 // 7. MANDATORY LOGIN & CHECKOUT
 window.checkoutViaWhatsApp = async () => {
     // Force user check
@@ -176,3 +170,4 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
