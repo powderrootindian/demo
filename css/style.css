@@ -363,8 +363,20 @@ footer {
 
 /* Specific Logo Image Styling */
 #nav-logo {
-    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.3)); /* Adds a subtle gold glow */
-    object-fit: contain;
+    height: 45px;
+    width: 45px; /* Width must match height for a perfect circle */
+    border-radius: 50%; /* This makes it circular */
+    object-fit: cover; /* Prevents stretching if the image isn't square */
+    border: 1.5px solid var(--gold-solid); /* Premium gold ring around the logo */
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); /* Subtle glow */
+}
+
+/* Mobile Adjustment */
+@media (max-width: 768px) {
+    #nav-logo {
+        height: 35px;
+        width: 35px;
+    }
 }
 
 /* Ensure Logo Text stays aligned */
@@ -388,5 +400,6 @@ footer {
         letter-spacing: 2px;
     }
 }
+
 
 
