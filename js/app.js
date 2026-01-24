@@ -2,7 +2,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// 2. CONFIGURATIONS (REPLACE WITH YOUR KEYS)
+// 2. CONFIGURATIONS
 const firebaseConfig = {
   apiKey: "AIzaSyC-VwmmnGZBPGctP8bWp_ozBBTw45-eYds",
   authDomain: "powderroot26.firebaseapp.com",
@@ -15,7 +15,7 @@ const firebaseConfig = {
 const EMAILJS_PUB_KEY = "lxY_3luPFEJNp2_dO";
 const EMAILJS_SERVICE = "service_cs926jb";
 const EMAILJS_TEMPLATE = "template_ojt95o7";
-const PHONE_NUMBER = "919096999662"; // Your number (Format: 91...)
+const PHONE_NUMBER = "919096999662"; // Ensure country code is included (e.g., 91 for India)
 
 // 3. INITIALIZE
 const app = initializeApp(firebaseConfig);
@@ -23,7 +23,7 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 emailjs.init(EMAILJS_PUB_KEY);
 
-// 4. PRODUCT CATALOG (Currency: ₹)
+// 4. PRODUCT CATALOG
 const products = [
     { id: 1, name: "Onion powder", price: 299, img: "assets/images/onion.jpg", desc: "Hand-milled sun-dried shallots." },
     { id: 2, name: "Garlic powder", price: 179, img: "assets/images/garlic.jpg", desc: "Slow-aged for deep umami essence." },
@@ -31,21 +31,18 @@ const products = [
 ];
 
 let cart = [];
-let currentUser = null;
 
-// 5. AUTHENTICATION (Login & Logout)
+// 5. AUTHENTICATION LOGIC
 onAuthStateChanged(auth, (user) => {
     const loginBtn = document.getElementById('login-btn');
     const userProfile = document.getElementById('user-profile');
     const userImg = document.getElementById('user-img');
 
     if (user) {
-        currentUser = user;
         loginBtn.classList.add('hidden');
         userProfile.classList.remove('hidden');
         userImg.src = user.photoURL;
     } else {
-        currentUser = null;
         loginBtn.classList.remove('hidden');
         userProfile.classList.add('hidden');
     }
@@ -60,7 +57,7 @@ window.handleLogout = () => {
     });
 };
 
-// 6. CART LOGIC
+// 6. CART & UI LOGIC
 window.toggleCart = () => document.getElementById('cart-drawer').classList.toggle('active');
 
 window.addToCart = (id) => {
@@ -79,19 +76,8 @@ function renderCart() {
     const list = document.getElementById('cart-items-list');
     const totalDisp = document.getElementById('cart-total');
     const countDisp = document.getElementById('cart-count');
-
-  function renderCart() {
-    // ... existing logic ...
-    
     const qrSection = document.getElementById('qr-payment-section');
-    if (cart.length > 0) {
-        qrSection.style.display = 'block';
-    } else {
-        qrSection.style.display = 'none';
-    }
     
-    // ... rest of the function ...
-}
     list.innerHTML = "";
     let total = 0;
 
@@ -100,7 +86,7 @@ function renderCart() {
         list.innerHTML += `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #222; padding-bottom:10px;">
                 <div>
-                    <div style="font-size:0.9rem; font-weight:600;">${item.name}</div>
+                    <div style="font-size:0.9rem; font-weight:600; color:#fff;">${item.name}</div>
                     <div style="color:#ff4d4d; font-size:0.7rem; cursor:pointer; margin-top:4px;" onclick="removeItem(${idx})">REMOVE</div>
                 </div>
                 <span style="color:#D4AF37; font-weight:600;">₹${item.price}</span>
@@ -109,44 +95,41 @@ function renderCart() {
 
     totalDisp.innerText = `₹${total.toFixed(2)}`;
     countDisp.innerText = cart.length;
+
+    // Show/Hide QR Code based on cart content
+    if (qrSection) {
+        qrSection.style.display = cart.length > 0 ? 'block' : 'none';
+    }
 }
 
-// 7. THE CLEAN WHATSAPP CHECKOUT
+// 7. MANDATORY LOGIN & CHECKOUT
 window.checkoutViaWhatsApp = async () => {
-    // 1. MANDATORY LOGIN CHECK
-    const activeUser = auth.currentUser; 
+    // Force user check
+    const activeUser = auth.currentUser;
 
     if (!activeUser) {
-        alert("Authentication Required: Please login with Google to continue with your order.");
-        // Optional: Automatically trigger login popup for the user
+        alert("Authentication Required: Please login with Google to continue.");
         try {
             await signInWithPopup(auth, provider);
-            // After successful login, the user can click checkout again
-            return; 
-        } catch (error) {
-            console.error("Login failed:", error);
+            return; // Exit so they can click checkout again after login
+        } catch (err) {
+            console.error("Login aborted", err);
             return;
         }
     }
 
-    // 2. CHECK IF CART IS EMPTY
-    if (cart.length === 0) {
-        return alert("Your bag is empty. Please add items before checking out.");
-    }
+    if (cart.length === 0) return alert("Your bag is empty.");
 
-    // 3. CAPTURE ADDRESS DATA
     const addr = document.getElementById('cust-address').value;
     const city = document.getElementById('cust-city').value;
     const zip = document.getElementById('cust-zip').value;
 
-    if (!addr || !city || !zip) {
-        return alert("Please provide your shipping details.");
-    }
+    if (!addr || !city || !zip) return alert("Please fill in shipping details.");
 
     const total = cart.reduce((a, b) => a + b.price, 0);
     const fullAddress = `${addr}, ${city} - ${zip}`;
 
-    // 4. TRIGGER EMAILJS
+    // Prepare EmailJS Data
     const templateParams = {
         to_name: activeUser.displayName,
         user_email: activeUser.email, 
@@ -155,43 +138,41 @@ window.checkoutViaWhatsApp = async () => {
         shipping_address: fullAddress
     };
 
+    // Send Email Receipt
     emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, templateParams)
-        .then(() => console.log("Confirmation email sent to: " + activeUser.email))
-        .catch((err) => console.error("Email failed:", err));
+        .then(() => console.log("Confirmation sent to " + activeUser.email))
+        .catch(err => console.error("Email error:", err));
 
-    // 5. REDIRECT TO WHATSAPP
-    let waText = `✨ *ORDER FROM POWDER ROOT* ✨\n`;
+    // Formulate WhatsApp Message
+    let waText = `✨ *NEW ORDER: POWDER ROOT* ✨\n`;
     waText += `──────────────────\n\n`;
     waText += `👤 *CUSTOMER:* ${activeUser.displayName}\n`;
     waText += `🛍️ *ITEMS:* ${cart.map(i => i.name).join(", ")}\n`;
-    waText += `💰 *TOTAL:* ₹${total}.00\n`;
-    waText += `📍 *ADDRESS:* ${fullAddress}\n\n`;
-    waText += `──────────────────`;
+    waText += `💰 *TOTAL PAYABLE:* ₹${total}.00\n`;
+    waText += `📍 *DELIVER TO:* ${fullAddress}\n\n`;
+    waText += `💳 *PAYMENT:* UPI QR Scanned\n`;
+    waText += `──────────────────\n`;
+    waText += `_I will send the payment screenshot next._`;
 
     window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(waText)}`, '_blank');
 };
 
-// 8. PAGE LOAD & ANIMATIONS
+// 8. PAGE INITIALIZATION
 const container = document.getElementById('product-container');
 products.forEach(p => {
     container.innerHTML += `
         <div class="product-card reveal">
             <img src="${p.img}" alt="${p.name}">
-            <h3 style="font-family:'Cinzel'; margin-top:20px; letter-spacing:1px;">${p.name}</h3>
-            <p style="font-size:0.7rem; color:#777; margin:10px 0; letter-spacing:1px;">${p.desc}</p>
-            <p style="color:#D4AF37; font-weight:bold; font-size:1.1rem; margin-bottom:15px;">₹${p.price}</p>
-            <button class="btn-gold-outline" onclick="addToCart(${p.id})">ADD TO BAG</button>
+            <h3 style="font-family:'Cinzel'; margin-top:20px;">${p.name}</h3>
+            <p style="font-size:0.75rem; color:#888; margin:10px 0;">${p.desc}</p>
+            <p style="color:#D4AF37; font-weight:bold; font-size:1.1rem;">₹${p.price}</p>
+            <button class="btn-gold-outline" style="margin-top:15px;" onclick="addToCart(${p.id})">ADD TO BAG</button>
         </div>
     `;
 });
 
-// Scroll Reveal Observer
+// Scroll Animation Observer
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-
-
-
-
