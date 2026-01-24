@@ -79,7 +79,19 @@ function renderCart() {
     const list = document.getElementById('cart-items-list');
     const totalDisp = document.getElementById('cart-total');
     const countDisp = document.getElementById('cart-count');
+
+  function renderCart() {
+    // ... existing logic ...
     
+    const qrSection = document.getElementById('qr-payment-section');
+    if (cart.length > 0) {
+        qrSection.style.display = 'block';
+    } else {
+        qrSection.style.display = 'none';
+    }
+    
+    // ... rest of the function ...
+}
     list.innerHTML = "";
     let total = 0;
 
@@ -178,6 +190,7 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
 
 
 
