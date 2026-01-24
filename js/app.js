@@ -13,7 +13,7 @@ const firebaseConfig = {
 const EMAILJS_PUB_KEY = "lxY_3luPFEJNp2_dO";
 const EMAILJS_SERVICE = "service_cs926jb";
 const EMAILJS_TEMPLATE = "template_ojt95o7";
-const PHONE_NUMBER = "919876543210"; 
+const PHONE_NUMBER = "919096999662"; 
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -123,3 +123,4 @@ products.forEach(p => {
             <button class="btn-gold-outline" onclick="addToCart(${p.id})">ADD TO BAG</button>
         </div>`;
 });
+
