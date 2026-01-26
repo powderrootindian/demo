@@ -60,6 +60,11 @@ window.addToCart = (id) => {
     renderCart();
     document.getElementById('cart-drawer').classList.add('active');
     document.body.classList.add('cart-open');
+    window.toggleCart = () => {
+window.removeItem = (index) => {
+window.checkoutViaWhatsApp = async () => {
+window.handleLogout = () => {
+
 };
 
 window.removeItem = (index) => {
@@ -155,5 +160,12 @@ products.forEach(p => {
             <p style="color:var(--gold); font-weight:bold; margin-bottom:15px;">₹${p.price}</p>
             <button class="btn-gold-outline" onclick="addToCart(${p.id})">ADD TO BAG</button>
         </div>`;
+    window.addToCart = addToCart;
+window.toggleCart = toggleCart;
+window.removeItem = removeItem;
+window.checkoutViaWhatsApp = checkoutViaWhatsApp;
+window.handleLogout = handleLogout;
+
 });
+
 
