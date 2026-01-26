@@ -119,6 +119,31 @@ body.cart-open::after {
     font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
 }
 .whatsapp-btn:hover { background: #20bd5a; }
+/* Premium Black & Gold Login Button */
+.btn-gold-outline {
+    background-color: #000000;       /* Black background */
+    color: #FFD700;                  /* Gold text */
+    font-family: 'Playfair Display', serif;  /* Elegant font */
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 28px;
+    border: 2px solid #FFD700;       /* Gold border */
+    border-radius: 12px;             /* Rounded corners */
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.4s ease;
+}
+
+/* Hover effect */
+.btn-gold-outline:hover {
+    background-color: #FFD700;       /* Gold background on hover */
+    color: #000000;                  /* Black text on hover */
+    border: 2px solid #000000;      /* Border changes to black */
+    transform: scale(1.05);          /* Slight zoom effect */
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5); /* Soft gold glow */
+}
+
 
 /* Utility */
 .hidden { display: none !important; }
@@ -212,6 +237,7 @@ body.cart-open::after {
     transform: scale(1.2);
     color: white;
 }
+
 
 
 
