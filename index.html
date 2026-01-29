@@ -10,61 +10,18 @@
 </head>
 <body>
 
-    <div class="video-bg">
-        <video autoplay muted loop playsinline id="bgVideo">
-            <source src="assets/video/background.mp4" type="video/mp4">
-        </video>
-        <div class="overlay"></div>
-    </div>
-
     <nav>
         <div class="logo-container" onclick="location.reload()">
-            <img src="assets/images/logo.png" alt="Logo" id="nav-logo">
             <div class="logo">POWDER<span>ROOT</span></div>
         </div>
         <div class="nav-right">
-            <div id="auth-section">
-                <button id="login-btn" class="btn-gold-outline">LOGIN</button>
-                <div id="user-profile" class="hidden">
-                    <img id="user-img" src="" alt="Profile">
-                    <span id="logout-link" onclick="handleLogout()">LOGOUT</span>
-                </div>
-                <a href="https://www.instagram.com/powderoots?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
-   target="_blank" 
-   class="insta-link">
-   <i class="fa-brands fa-instagram"></i>
-</a>
-
-            </div>
+            <button id="login-btn" class="btn-gold-outline">LOGIN</button>
             <div class="cart-trigger" onclick="toggleCart()">
                 <i class="fa-solid fa-bag-shopping"></i>
                 <span id="cart-count">0</span>
             </div>
         </div>
     </nav>
-
-    <section class="hero">
-        <div class="hero-content">
-            <h5>ESTD 2026</h5>
-            <h1>PURE. ORGANIC. <br> REFINED.</h1>
-            <button class="btn-gold" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">EXPLORE BOUTIQUE</button>
-        </div>
-    </section>
-<section class="trust-strip">
-    <div>🌿 100% Natural</div>
-    <div>🇮🇳 Made in India</div>
-    <div>🧪 Lab Tested</div>
-    <div>🚚 Fast Shipping</div>
-</section>
-
-<section class="about-premium">
-    <h2>Why Powder Root?</h2>
-    <p>
-        At Powder Root, we believe purity is not a feature — it is the foundation.
-        Every product is crafted from carefully selected Indian produce, slow-dried
-        and stone-ground to preserve aroma, potency and nutrition.
-    </p>
-</section>
 
     <section id="shop" class="shop-section">
         <h2 class="section-title">The Boutique Collection</h2>
@@ -73,43 +30,19 @@
 
     <div id="cart-drawer" class="cart-drawer">
         <div class="cart-header">
-            <h3>YOUR SELECTIONS</h3>
+            <h3>YOUR BAG</h3>
             <i class="fa-solid fa-xmark" onclick="toggleCart()"></i>
         </div>
-        
         <div id="cart-items-list"></div>
-
-        <div id="qr-payment-section" style="display: none;">
-            <div class="qr-box">
-                <h4 class="gold-subtitle">SECURE UPI PAYMENT</h4>
-                <div id="qr-container"></div>
-                <a id="upi-pay-link" href="#" class="btn-gold-outline full-width">TAP TO PAY (MOBILE)</a>
-            </div>
-        </div>
-
-        <div class="address-section">
-            <h4 class="gold-subtitle">SHIPPING DETAILS</h4>
-            <input type="text" id="cust-address" placeholder="Street Address" class="gold-input">
-            <div class="row">
-                <input type="text" id="cust-city" placeholder="City" class="gold-input">
-                <input type="text" id="cust-zip" placeholder="ZIP" class="gold-input">
-            </div>
-        </div>
-
         <div class="cart-footer">
             <div class="total-row">
                 <span>TOTAL</span>
-                <span id="cart-total">₹0.00</span>
+                <span id="cart-total">₹0</span>
             </div>
-            <button class="whatsapp-btn" onclick="checkoutViaWhatsApp()">
-                COMPLETE ORDER <i class="fa-brands fa-whatsapp"></i>
-            </button>
+            <button class="btn-checkout" onclick="checkoutViaWhatsApp()">CHECKOUT VIA WHATSAPP</button>
         </div>
     </div>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="module" src="js/app.js"></script>
 </body>
 </html>
-
-
