@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+// Your Credentials
 const firebaseConfig = { 
     apiKey: "AIzaSyC-VwmmnGZBPGctP8bWp_ozBBTw45-eYds",
     authDomain: "powderroot26.firebaseapp.com",
@@ -46,35 +47,33 @@ function renderCart() {
     let total = 0; list.innerHTML = '';
     cart.forEach(item => {
         total += item.price;
-        list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #111;"><span>${item.name}</span><span>₹${item.price}</span></div>`;
+        list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #111;"><span>${item.name}</span><span style="color:var(--gold)">₹${item.price}</span></div>`;
     });
     document.getElementById('cart-total').innerText = `₹${total}`;
     document.getElementById('cart-count').innerText = cart.length;
-    const upiSection = document.getElementById('upi-section');
+    const upi = document.getElementById('upi-section');
     if(total > 0) {
-        upiSection.classList.remove('hidden');
-        const upiUrl = `upi://pay?pa=${UPI_ID}&pn=PowderRoot&am=${total}&cu=INR`;
-        document.getElementById('upi-mobile-link').href = upiUrl;
-        document.getElementById('qr-container').innerHTML = `<img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodeURIComponent(upiUrl)}">`;
+        upi.classList.remove('hidden');
+        const url = `upi://pay?pa=${UPI_ID}&pn=PowderRoot&am=${total}&cu=INR`;
+        document.getElementById('upi-mobile-link').href = url;
+        document.getElementById('qr-container').innerHTML = `<img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodeURIComponent(url)}">`;
     }
 }
 
 window.checkoutViaWhatsApp = () => {
-    const user = auth.currentUser;
-    const addr = document.getElementById('cust-address').value;
-    if(!user || !addr) return alert("Please Login & Enter Address");
+    const user = auth.currentUser, addr = document.getElementById('cust-address').value;
+    if(!user || !addr) return alert("Login & Address required");
 
-    const total = cart.reduce((a, b) => a + b.price, 0);
-    const items = cart.map(i => i.name).join(", ");
+    const total = cart.reduce((a, b) => a + b.price, 0), items = cart.map(i => i.name).join(", ");
 
+    // EMAILJS
     emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { customer_name: user.displayName, order_details: items, total_price: `₹${total}`, shipping_address: addr });
 
+    // SUCCESS UI
     const overlay = document.getElementById('success-overlay');
-    document.getElementById('summary-name').innerText = `Name: ${user.displayName}`;
-    document.getElementById('summary-total').innerText = `Total: ₹${total}`;
     overlay.classList.remove('hidden'); setTimeout(() => overlay.classList.add('active'), 10);
 
-    const msg = `✨ *ORDER: POWDER ROOT* ✨\n👤 *Client:* ${user.displayName}\n📦 *Items:* ${items}\n💰 *Total:* ₹${total}\n📍 *Address:* ${addr}`;
+    const msg = `✨ *ORDER: POWDER ROOT* ✨\n👤 *Client:* ${user.displayName}\n💰 *Total:* ₹${total}\n📍 *Address:* ${addr}`;
     setTimeout(() => { window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`, '_blank'); }, 2500);
     cart = []; renderCart(); toggleCart();
 };
@@ -84,8 +83,8 @@ window.closeSuccess = () => { document.getElementById('success-overlay').classLi
 products.forEach(p => {
     document.getElementById('product-container').innerHTML += `
         <div class="product-card">
-            <img src="${p.img}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/300'">
-            <h3>${p.name}</h3><p>₹${p.price}</p>
-            <button class="btn-gold-outline" onclick="addToCart(${p.id})">ADD TO BAG</button>
+            <img src="${p.img}" style="width:100%; margin-bottom:15px;" onerror="this.src='https://via.placeholder.com/300'">
+            <h3>${p.name}</h3><p style="color:var(--gold); margin:10px 0;">₹${p.price}</p>
+            <button class="btn-gold-outline" style="width:100%" onclick="addToCart(${p.id})">ADD TO BAG</button>
         </div>`;
 });
