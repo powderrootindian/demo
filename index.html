@@ -40,18 +40,13 @@
 
     <div class="premium-trust-bar">
         <div class="trust-content">
-            <span><i class="fa-solid fa-shield-check"></i> VERIFIED AUTHENTIC</span>
+            <span><i class="fa-solid fa-certificate"></i> AUTHENTIC</span>
             <div class="v-divider"></div>
             <span><i class="fa-solid fa-leaf"></i> 100% ORGANIC</span>
             <div class="v-divider"></div>
-            <span><i class="fa-solid fa-truck-fast"></i> EXPRESS SHIPPING</span>
+            <span><i class="fa-solid fa-truck-fast"></i> EXPRESS</span>
         </div>
     </div>
-
-    <section class="hero-text">
-        <span class="eyebrow">ESTABLISHED 2026</span>
-        <h1>Artisanal Spices</h1>
-    </section>
 
     <section id="shop" class="shop-section">
         <div class="product-grid" id="product-container"></div>
@@ -59,25 +54,30 @@
 
     <div id="cart-drawer" class="cart-drawer">
         <div class="cart-header">
-            <h3>YOUR BAG</h3>
+            <h3>YOUR SELECTION</h3>
             <i class="fa-solid fa-xmark" onclick="toggleCart()"></i>
         </div>
         <div id="cart-items-list"></div>
         <div class="cart-footer">
             <div class="total-row"><span>TOTAL</span><span id="cart-total">₹0</span></div>
-            
             <div id="upi-section" class="payment-section hidden">
-                <p class="payment-label">SCAN OR CLICK TO PAY</p>
                 <div id="qr-container"></div>
                 <a id="upi-mobile-link" href="#" class="upi-btn">OPEN UPI APP</a>
             </div>
-
             <div class="premium-input-group">
                 <input type="text" id="cust-address" required>
                 <label>SHIPPING ADDRESS</label>
                 <div class="bar"></div>
             </div>
             <button class="whatsapp-btn" onclick="checkoutViaWhatsApp()">CONFIRM ORDER</button>
+        </div>
+    </div>
+
+    <div id="success-overlay" class="success-overlay hidden">
+        <div class="success-content">
+            <div class="checkmark-circle"><i class="fa-solid fa-check"></i></div>
+            <h2>ORDER RECEIVED</h2>
+            <button class="btn-gold-outline" onclick="closeSuccess()">RETURN TO SHOP</button>
         </div>
     </div>
 
