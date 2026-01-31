@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>POWDER ROOT | Artisanal Boutique</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -27,12 +27,10 @@
             <div class="logo">POWDER<span>ROOT</span></div>
         </div>
         <div class="nav-right">
-            <a href="https://instagram.com/powderrootindian" target="_blank" class="social-link"><i class="fa-brands fa-instagram"></i></a>
-            <button id="login-btn" class="btn-gold-outline" onclick="handleLogin()">LOGIN</button>
             <div id="user-profile" class="hidden auth-profile">
                 <div class="avatar-wrapper"><img id="user-img" src="" alt="User"></div>
-                <span onclick="handleLogout()" class="logout-text">LOGOUT</span>
             </div>
+            <button id="login-btn" class="btn-gold-nav" onclick="handleLogin()">LOGIN</button>
             <div class="cart-trigger" onclick="toggleCart()">
                 <i class="fa-solid fa-bag-shopping"></i>
                 <span id="cart-count">0</span>
@@ -40,12 +38,19 @@
         </div>
     </nav>
 
-    <section class="brand-story">
-        <div class="story-content">
-            <span class="eyebrow">ESTD 2026</span>
-            <h2>Pure. Potent. Personal.</h2>
-            <div class="gold-divider"></div>
+    <div class="premium-trust-bar">
+        <div class="trust-content">
+            <span><i class="fa-solid fa-shield-check"></i> VERIFIED AUTHENTIC</span>
+            <div class="v-divider"></div>
+            <span><i class="fa-solid fa-leaf"></i> 100% ORGANIC</span>
+            <div class="v-divider"></div>
+            <span><i class="fa-solid fa-truck-fast"></i> EXPRESS SHIPPING</span>
         </div>
+    </div>
+
+    <section class="hero-text">
+        <span class="eyebrow">ESTABLISHED 2026</span>
+        <h1>Artisanal Spices</h1>
     </section>
 
     <section id="shop" class="shop-section">
@@ -54,46 +59,29 @@
 
     <div id="cart-drawer" class="cart-drawer">
         <div class="cart-header">
-            <h3>YOUR SELECTION</h3>
+            <h3>YOUR BAG</h3>
             <i class="fa-solid fa-xmark" onclick="toggleCart()"></i>
         </div>
         <div id="cart-items-list"></div>
         <div class="cart-footer">
-            <div class="total-row"><span>SUBTOTAL</span><span id="cart-total">₹0</span></div>
+            <div class="total-row"><span>TOTAL</span><span id="cart-total">₹0</span></div>
+            
             <div id="upi-section" class="payment-section hidden">
-                <p class="payment-label">SECURE UPI PAYMENT</p>
+                <p class="payment-label">SCAN OR CLICK TO PAY</p>
                 <div id="qr-container"></div>
-                <a id="upi-mobile-link" href="#" class="upi-btn">PAY WITH UPI APP</a>
-                <label for="screenshot-upload" class="upload-label"><i class="fa-solid fa-camera"></i> UPLOAD RECEIPT</label>
-                <input type="file" id="screenshot-upload" accept="image/*" class="hidden">
-                <span id="file-name-display" class="file-name"></span>
+                <a id="upi-mobile-link" href="#" class="upi-btn">OPEN UPI APP</a>
             </div>
-            <input type="text" id="cust-address" placeholder="Shipping Address" class="gold-input">
+
+            <div class="premium-input-group">
+                <input type="text" id="cust-address" required>
+                <label>SHIPPING ADDRESS</label>
+                <div class="bar"></div>
+            </div>
             <button class="whatsapp-btn" onclick="checkoutViaWhatsApp()">CONFIRM ORDER</button>
         </div>
     </div>
-
-    <div id="success-overlay" class="success-overlay hidden">
-        <div class="success-content">
-            <div class="checkmark-circle"><i class="fa-solid fa-check"></i></div>
-            <h2>ORDER RECEIVED</h2>
-            <div class="success-details"><span id="summary-name"></span><br><span id="summary-total"></span></div>
-            <p class="redirect-note">Opening WhatsApp for final confirmation...</p>
-            <button class="btn-gold-outline" onclick="closeSuccess()">BACK TO SHOP</button>
-        </div>
-    </div>
-
-    <footer class="boutique-footer">
-        <div class="footer-trust">
-            <span><i class="fa-solid fa-certificate"></i> FSSAI</span>
-            <span><i class="fa-solid fa-leaf"></i> 100% ORGANIC</span>
-        </div>
-        <div class="footer-logo">POWDER<span>ROOT</span></div>
-        <p class="copyright">&copy; 2026 POWDER ROOT.</p>
-    </footer>
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="module" src="js/app.js"></script>
 </body>
 </html>
-
