@@ -1,11 +1,14 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// Your Credentials
-const firebaseConfig = { 
-    apiKey: "AIzaSyC-VwmmnGZBPGctP8bWp_ozBBTw45-eYds",
-    authDomain: "powderroot26.firebaseapp.com",
-    projectId: "powderroot26",
+const firebaseConfig = {
+  apiKey: "AIzaSyC-VwmmnGZBPGctP8bWp_ozBBTw45-eYds",
+  authDomain: "powderroot26.firebaseapp.com",
+  projectId: "powderroot26",
+  storageBucket: "powderroot26.firebasestorage.app",
+  messagingSenderId: "776300724322",
+  appId: "1:776300724322:web:44b8908b6ffe1f6596513b",
+  measurementId: "G-3GTKBEFJ2V"
 };
 const EMAILJS_SERVICE = "service_cs926jb", EMAILJS_TEMPLATE = "template_ojt95o7", EMAILJS_KEY = "lxY_3luPFEJNp2_dO";
 const UPI_ID = "8788855688-2@ybl", PHONE = "919096999662";
@@ -22,11 +25,6 @@ const products = [
 ];
 let cart = [];
 
-window.addEventListener('load', () => {
-    document.querySelector('.loader-bar').style.width = '100%';
-    setTimeout(() => { document.getElementById('preloader').style.display = 'none'; }, 800);
-});
-
 onAuthStateChanged(auth, (user) => {
     document.getElementById('login-btn').classList.toggle('hidden', !!user);
     document.getElementById('user-profile').classList.toggle('hidden', !user);
@@ -34,7 +32,6 @@ onAuthStateChanged(auth, (user) => {
 });
 
 window.handleLogin = () => signInWithPopup(auth, provider);
-window.handleLogout = () => signOut(auth).then(() => location.reload());
 window.toggleCart = () => document.getElementById('cart-drawer').classList.toggle('active');
 
 window.addToCart = (id) => {
@@ -47,44 +44,50 @@ function renderCart() {
     let total = 0; list.innerHTML = '';
     cart.forEach(item => {
         total += item.price;
-        list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #111;"><span>${item.name}</span><span style="color:var(--gold)">₹${item.price}</span></div>`;
+        list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #222; font-size:0.9rem;"><span>${item.name}</span><span>₹${item.price}</span></div>`;
     });
     document.getElementById('cart-total').innerText = `₹${total}`;
     document.getElementById('cart-count').innerText = cart.length;
-    const upi = document.getElementById('upi-section');
+
     if(total > 0) {
-        upi.classList.remove('hidden');
-        const url = `upi://pay?pa=${UPI_ID}&pn=PowderRoot&am=${total}&cu=INR`;
-        document.getElementById('upi-mobile-link').href = url;
-        document.getElementById('qr-container').innerHTML = `<img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=${encodeURIComponent(url)}">`;
+        document.getElementById('payment-area').classList.remove('hidden');
+        const upiUrl = `upi://pay?pa=${UPI_ID}&pn=PowderRoot&am=${total}&cu=INR`;
+        // Desktop QR
+        document.getElementById('qr-container').innerHTML = `<img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=${encodeURIComponent(upiUrl)}">`;
+        // Mobile Intent
+        document.getElementById('upi-intent-link').href = upiUrl;
     }
 }
 
-window.checkoutViaWhatsApp = () => {
+window.processOrder = () => {
     const user = auth.currentUser, addr = document.getElementById('cust-address').value;
-    if(!user || !addr) return alert("Login & Address required");
+    if(!user || !addr) return alert("Please Login & Enter Address first");
 
-    const total = cart.reduce((a, b) => a + b.price, 0), items = cart.map(i => i.name).join(", ");
+    const total = cart.reduce((a, b) => a + b.price, 0);
+    const items = cart.map(i => i.name).join(", ");
 
-    // EMAILJS
-    emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { customer_name: user.displayName, order_details: items, total_price: `₹${total}`, shipping_address: addr });
+    // 1. Send Email Log
+    emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, { 
+        customer_name: user.displayName, 
+        order_details: items, 
+        total_price: `₹${total}`, 
+        shipping_address: addr 
+    });
 
-    // SUCCESS UI
-    const overlay = document.getElementById('success-overlay');
-    overlay.classList.remove('hidden'); setTimeout(() => overlay.classList.add('active'), 10);
+    // 2. Open WhatsApp Confirmation
+    const msg = `✨ *ORDER INITIATED* ✨\n👤 *Client:* ${user.displayName}\n💰 *Total:* ₹${total}\n📍 *Address:* ${addr}`;
+    window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
 
-    const msg = `✨ *ORDER: POWDER ROOT* ✨\n👤 *Client:* ${user.displayName}\n💰 *Total:* ₹${total}\n📍 *Address:* ${addr}`;
-    setTimeout(() => { window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`, '_blank'); }, 2500);
-    cart = []; renderCart(); toggleCart();
+    // 3. Show Success Overlay
+    document.getElementById('success-overlay').classList.remove('hidden');
 };
-
-window.closeSuccess = () => { document.getElementById('success-overlay').classList.add('hidden'); };
 
 products.forEach(p => {
     document.getElementById('product-container').innerHTML += `
         <div class="product-card">
-            <img src="${p.img}" style="width:100%; margin-bottom:15px;" onerror="this.src='https://via.placeholder.com/300'">
-            <h3>${p.name}</h3><p style="color:var(--gold); margin:10px 0;">₹${p.price}</p>
-            <button class="btn-gold-outline" style="width:100%" onclick="addToCart(${p.id})">ADD TO BAG</button>
+            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/300'">
+            <h3 style="font-family:'Cinzel'; font-size:1rem;">${p.name}</h3>
+            <p style="color:var(--gold); margin:10px 0; font-weight:bold;">₹${p.price}</p>
+            <button onclick="addToCart(${p.id})" style="width:100%; padding:10px; background:none; border:1px solid var(--gold); color:var(--gold); cursor:pointer;">ADD TO BAG</button>
         </div>`;
 });
