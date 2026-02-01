@@ -4,33 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>POWDER ROOT | Artisanal Boutique</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <div id="preloader">
-        <div class="loader-logo">POWDER<span>ROOT</span></div>
-        <div class="loader-bar"></div>
-    </div>
-
-    <div class="video-background">
+    <div class="video-container">
         <video autoplay muted loop playsinline id="bg-video">
             <source src="assets/video/bg-texture.mp4" type="video/mp4">
         </video>
-        <div class="video-overlay"></div>
     </div>
 
     <nav>
-        <div class="logo-container" onclick="location.reload()">
-            <div class="logo">POWDER<span>ROOT</span></div>
-        </div>
+        <div class="logo">POWDER<span>ROOT</span></div>
         <div class="nav-right">
             <div id="user-profile" class="hidden auth-profile">
-                <div class="avatar-wrapper"><img id="user-img" src="" alt="User"></div>
+                <img id="user-img" src="" alt="User">
             </div>
-            <button id="login-btn" class="btn-gold-nav" onclick="handleLogin()">LOGIN</button>
+            <button id="login-btn" onclick="handleLogin()">LOGIN</button>
             <div class="cart-trigger" onclick="toggleCart()">
                 <i class="fa-solid fa-bag-shopping"></i>
                 <span id="cart-count">0</span>
@@ -38,46 +30,51 @@
         </div>
     </nav>
 
-    <div class="premium-trust-bar">
-        <div class="trust-content">
-            <span><i class="fa-solid fa-certificate"></i> AUTHENTIC</span>
-            <div class="v-divider"></div>
-            <span><i class="fa-solid fa-leaf"></i> 100% ORGANIC</span>
-            <div class="v-divider"></div>
-            <span><i class="fa-solid fa-truck-fast"></i> EXPRESS</span>
-        </div>
+    <div class="trust-bar">
+        <span><i class="fa-solid fa-certificate"></i> AUTHENTIC</span>
+        <span><i class="fa-solid fa-leaf"></i> ORGANIC</span>
+        <span><i class="fa-solid fa-truck-fast"></i> EXPRESS</span>
     </div>
 
-    <section id="shop" class="shop-section">
+    <main class="shop-container">
         <div class="product-grid" id="product-container"></div>
-    </section>
+    </main>
 
     <div id="cart-drawer" class="cart-drawer">
         <div class="cart-header">
-            <h3>YOUR SELECTION</h3>
+            <h3>CHECKOUT</h3>
             <i class="fa-solid fa-xmark" onclick="toggleCart()"></i>
         </div>
+        
         <div id="cart-items-list"></div>
+        
         <div class="cart-footer">
-            <div class="total-row"><span>TOTAL</span><span id="cart-total">₹0</span></div>
-            <div id="upi-section" class="payment-section hidden">
-                <div id="qr-container"></div>
-                <a id="upi-mobile-link" href="#" class="upi-btn">OPEN UPI APP</a>
+            <div class="total-row"><span>SUBTOTAL</span><span id="cart-total">₹0</span></div>
+            
+            <div id="payment-area" class="hidden">
+                <div class="qr-wrapper">
+                    <p>SCAN TO PAY</p>
+                    <div id="qr-container"></div>
+                </div>
+                <a id="upi-intent-link" class="direct-pay-btn">
+                    <i class="fa-solid fa-bolt"></i> PAY VIA UPI APP
+                </a>
             </div>
-            <div class="premium-input-group">
-                <input type="text" id="cust-address" required>
-                <label>SHIPPING ADDRESS</label>
-                <div class="bar"></div>
+
+            <div class="premium-input">
+                <input type="text" id="cust-address" required placeholder="Full Shipping Address">
             </div>
-            <button class="whatsapp-btn" onclick="checkoutViaWhatsApp()">CONFIRM ORDER</button>
+            
+            <button class="checkout-btn" onclick="processOrder()">CONFIRM & PAY</button>
         </div>
     </div>
 
     <div id="success-overlay" class="success-overlay hidden">
-        <div class="success-content">
-            <div class="checkmark-circle"><i class="fa-solid fa-check"></i></div>
-            <h2>ORDER RECEIVED</h2>
-            <button class="btn-gold-outline" onclick="closeSuccess()">RETURN TO SHOP</button>
+        <div class="success-box">
+            <i class="fa-solid fa-circle-check"></i>
+            <h2>PAYMENT INITIATED</h2>
+            <p>Please complete payment and check WhatsApp for confirmation.</p>
+            <button class="close-btn" onclick="location.reload()">BACK TO SHOP</button>
         </div>
     </div>
 
