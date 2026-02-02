@@ -3,40 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>POWDER ROOT | Artisanal Boutique</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>POWDER ROOT | Indian Artisanal Boutique</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <div class="video-container">
-        <video autoplay muted loop playsinline id="bg-video">
-            <source src="assets/video/bg-texture.mp4" type="video/mp4">
-        </video>
-    </div>
-
-    <nav>
-        <div class="logo">POWDER<span>ROOT</span></div>
-        <div class="nav-right">
-            <div id="user-profile" class="hidden auth-profile">
-                <img id="user-img" src="" alt="User">
-            </div>
-            <button id="login-btn" onclick="handleLogin()">LOGIN</button>
-            <div class="cart-trigger" onclick="toggleCart()">
-                <i class="fa-solid fa-bag-shopping"></i>
-                <span id="cart-count">0</span>
-            </div>
+    <div class="trust-nav">
+        <div class="trust-slider">
+            <span><i class="fa-solid fa-shield-halved"></i> 100% SECURE DIRECT PAY</span>
+            <span><i class="fa-solid fa-seedling"></i> CHOSEN INDIAN VEGETABLES</span>
+            <span><i class="fa-solid fa-truck-fast"></i> PAN-INDIA EXPRESS DELIVERY</span>
+            <span><i class="fa-solid fa-microscope"></i> LABORATORY TESTED PURITY</span>
         </div>
-    </nav>
-
-    <div class="trust-bar">
-        <span><i class="fa-solid fa-certificate"></i> AUTHENTIC</span>
-        <span><i class="fa-solid fa-leaf"></i> ORGANIC</span>
-        <span><i class="fa-solid fa-truck-fast"></i> EXPRESS</span>
     </div>
 
-    <main class="shop-container">
+    <section class="hero">
+        <div class="video-container">
+            <video autoplay muted loop playsinline id="bg-video">
+                <source src="assets/video/bg-texture.mp4" type="video/mp4">
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+        
+        <nav>
+            <div class="logo">POWDER<span>ROOT</span></div>
+            <div class="nav-right">
+                <div id="user-profile" class="hidden auth-profile">
+                    <img id="user-img" src="" alt="User">
+                </div>
+                <button id="login-btn" class="btn-gold-nav" onclick="handleLogin()">LOGIN</button>
+                <div class="cart-trigger" onclick="toggleCart()">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span id="cart-count">0</span>
+                </div>
+            </div>
+        </nav>
+
+        <div class="hero-content">
+            <span class="eyebrow">THE APOTHECARY OF ROOTS</span>
+            <h1>SELECTED EARTH.</h1>
+        </div>
+    </section>
+
+    <main class="shop-container" id="shop">
         <div class="product-grid" id="product-container"></div>
     </main>
 
@@ -45,40 +56,30 @@
             <h3>CHECKOUT</h3>
             <i class="fa-solid fa-xmark" onclick="toggleCart()"></i>
         </div>
-        
         <div id="cart-items-list"></div>
-        
         <div class="cart-footer">
-            <div class="total-row"><span>SUBTOTAL</span><span id="cart-total">₹0</span></div>
-            
-            <div id="payment-area" class="hidden">
+            <div class="total-row"><span>GRAND TOTAL</span><span id="cart-total">₹0</span></div>
+
+            <div id="secure-payment-zone" class="hidden">
                 <div class="qr-wrapper">
-                    <p>SCAN TO PAY</p>
+                    <p>DIRECT UPI SCAN</p>
                     <div id="qr-container"></div>
                 </div>
-                <a id="upi-intent-link" class="direct-pay-btn">
-                    <i class="fa-solid fa-bolt"></i> PAY VIA UPI APP
-                </a>
+                <a id="upi-intent-link" class="premium-pay-btn">PAY WITH UPI APP</a>
+                <button class="whatsapp-btn" onclick="syncOrderToWhatsApp()">SYNC TO WHATSAPP</button>
+            </div>
+
+            <div id="checkout-lock-msg" class="lock-notice">
+                <i class="fa-solid fa-lock"></i> Authorize & Enter Address to Pay
             </div>
 
             <div class="premium-input">
-                <input type="text" id="cust-address" required placeholder="Full Shipping Address">
+                <input type="text" id="cust-address" required placeholder="SHIPPING DESTINATION" oninput="validateCheckout()">
             </div>
-            
-            <button class="checkout-btn" onclick="processOrder()">CONFIRM & PAY</button>
         </div>
     </div>
 
-    <div id="success-overlay" class="success-overlay hidden">
-        <div class="success-box">
-            <i class="fa-solid fa-circle-check"></i>
-            <h2>PAYMENT INITIATED</h2>
-            <p>Please complete payment and check WhatsApp for confirmation.</p>
-            <button class="close-btn" onclick="location.reload()">BACK TO SHOP</button>
-        </div>
-    </div>
-
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script type="module" src="js/app.js"></script>
 </body>
 </html>
